@@ -245,7 +245,7 @@ def chunk_text(text: str):
 
 def call_gemini(prompt: str, system: str = "") -> str:
     model = genai.GenerativeModel(
-        "gemini-1.5-flash",
+        "gemini-2.5-pro",
         system_instruction=system if system else None,
     )
     response = model.generate_content(prompt)
