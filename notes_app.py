@@ -197,13 +197,10 @@ def export_pdf(notes):
     pdf.cell(200, 10, "StudyAI Notes", ln=True)
     pdf.ln(5)
 
-    def clean_line(text):
-        # remove non-ascii + collapse long tokens
+    def clean(text):
         text = re.sub(r"[^\x00-\x7F]+", " ", text)
         text = re.sub(r"\s+", " ", text)
-
-        # HARD FIX: break extremely long words
-        return " ".join([w if len(w) < 80 else w[:80] + "..." for w in text.split(" ")])
+        return text
 
     for i, n in enumerate(notes):
         pdf.set_font("Arial", style="B", size=11)
@@ -212,7 +209,7 @@ def export_pdf(notes):
         pdf.set_font("Arial", size=10)
 
         for line in n.split("\n"):
-            line = clean_line(line)
+            line = clean(line)
 
             if not line.strip():
                 continue
@@ -220,13 +217,15 @@ def export_pdf(notes):
             try:
                 pdf.multi_cell(0, 6, line)
             except:
-                # LAST RESORT: skip bad line instead of crashing
                 continue
 
         pdf.ln(3)
 
+    # ✅ FIX: DO NOT encode manually
+    pdf_bytes = pdf.output(dest="S")
+
     buffer = BytesIO()
-    buffer.write(pdf.output(dest="S").encode("latin-1"))
+    buffer.write(pdf_bytes if isinstance(pdf_bytes, bytes) else pdf_bytes.encode("latin-1"))
     buffer.seek(0)
 
     return buffer
