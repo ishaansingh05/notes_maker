@@ -5,7 +5,7 @@ import json
 import time
 import random
 import numpy as np
-import google.generativeai as genai
+from groq import Groq
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
 import faiss
@@ -244,12 +244,24 @@ def chunk_text(text: str):
 
 
 def call_gemini(prompt: str, system: str = "") -> str:
-    model = genai.GenerativeModel(
-        "gemini-2.5-pro",
-        system_instruction=system if system else None,
+    client = st.session_state.client
+
+    response = client.chat.completions.create(
+        model="llama-3.1-8b-instant",
+        messages=[
+            {
+                "role": "system",
+                "content": system if system else "You are a helpful assistant."
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.3,
     )
-    response = model.generate_content(prompt)
-    return response.text
+
+    return response.choices[0].message.content
 
 
 def summarize_chunk(chunk: str) -> str:
@@ -388,13 +400,14 @@ with st.sidebar:
     st.markdown("<p style='color:#9BA3B4;font-size:13px;'>Upload a PDF → get notes, chat, and quiz yourself.</p>", unsafe_allow_html=True)
     st.divider()
 
-    api_key = st.text_input("Gemini API Key", type="password", placeholder="AIza...")
-    if api_key:
-        genai.configure(api_key=api_key)
-        st.session_state.api_configured = True
-        st.success("API key set ✓")
+    api_key = st.text_input("Groq API Key", type="password", placeholder="gsk_...")
 
-    st.markdown("[Get free Gemini API key →](https://aistudio.google.com/app/apikey)", unsafe_allow_html=False)
+if api_key:
+    st.session_state.client = Groq(api_key=api_key)
+    st.session_state.api_configured = True
+    st.success("API key set ✓")
+
+st.markdown("[Get free Groq API key →](https://console.groq.com/keys)")
     st.divider()
 
     uploaded = st.file_uploader("Upload PDF", type=["pdf"])
