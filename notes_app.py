@@ -61,7 +61,7 @@ def llm(prompt, system=""):
 
     try:
         res = client.chat.completions.create(
-            model="llama-3.1-8b-instant"",
+            model="llama-3.1-8b-instant",
             messages=messages,
             temperature=0.2,
         )
