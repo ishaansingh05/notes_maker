@@ -191,16 +191,33 @@ Question: {q}
 def export_pdf(notes):
     pdf = FPDF()
     pdf.add_page()
+    pdf.set_auto_page_break(auto=True, margin=15)
     pdf.set_font("Arial", size=12)
 
     pdf.cell(200, 10, "StudyAI Notes", ln=True)
+    pdf.ln(5)
 
     for i, n in enumerate(notes):
+        pdf.set_font("Arial", style="B", size=11)
         pdf.cell(200, 10, f"Section {i+1}", ln=True)
-        pdf.multi_cell(0, 8, re.sub(r"[^\x00-\x7F]+", "", n))
 
-    return pdf.output(dest="S").encode("latin-1")
+        pdf.set_font("Arial", size=10)
 
+        clean_text = re.sub(r"[^\x00-\x7F]+", " ", n)
+
+        for line in clean_text.split("\n"):
+            line = line.strip()
+            if line:
+                pdf.multi_cell(0, 6, line)
+
+        pdf.ln(3)
+
+    # ✅ IMPORTANT FIX: return BytesIO instead of encode()
+    buffer = BytesIO()
+    buffer.write(pdf.output(dest="S").encode("latin-1"))
+    buffer.seek(0)
+
+    return buffer
 
 # ───────────────────────── SIDEBAR ─────────────────────────
 with st.sidebar:
@@ -250,10 +267,23 @@ tab1, tab2, tab3 = st.tabs(["Notes", "Chat", "Quiz"])
 
 # ───────── NOTES ─────────
 with tab1:
-    if st.button("Export PDF"):
-        pdf = export_pdf(st.session_state.notes)
-        st.download_button("Download", pdf, "notes.pdf")
+    st.markdown("### 📝 Your Exam Notes")
 
+    # Generate PDF once on click
+    if st.button("📄 Generate PDF"):
+        st.session_state.pdf_buffer = export_pdf(st.session_state.notes)
+        st.success("PDF ready for download!")
+
+    # Persistent download button (IMPORTANT FIX)
+    if "pdf_buffer" in st.session_state:
+        st.download_button(
+            label="⬇️ Download PDF",
+            data=st.session_state.pdf_buffer,
+            file_name="notes.pdf",
+            mime="application/pdf"
+        )
+
+    # Notes display
     for i, n in enumerate(st.session_state.notes):
         st.markdown(f"### Section {i+1}")
         st.markdown(n)
