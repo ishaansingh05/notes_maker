@@ -403,9 +403,9 @@ with st.sidebar:
     api_key = st.text_input("Groq API Key", type="password", placeholder="gsk_...")
 
     if api_key:
-    st.session_state.client = Groq(api_key=api_key)
-    st.session_state.api_configured = True
-    st.success("API key set ✓")
+        st.session_state.client = Groq(api_key=api_key)
+        st.session_state.api_configured = True
+        st.success("API key set ✓")
 
     st.markdown("[Get free Groq API key →](https://console.groq.com/keys)")
     st.divider()
