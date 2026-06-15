@@ -12,7 +12,7 @@ from groq import Groq
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
 from fpdf import FPDF
-
+from io import BytesIO
 
 # ───────────────────────── CONFIG ─────────────────────────
 st.set_page_config(page_title="StudyAI Pro", page_icon="🧠", layout="wide")
@@ -192,10 +192,18 @@ def export_pdf(notes):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.set_font("Arial", size=12)
 
+    pdf.set_font("Arial", size=12)
     pdf.cell(200, 10, "StudyAI Notes", ln=True)
     pdf.ln(5)
+
+    def clean_line(text):
+        # remove non-ascii + collapse long tokens
+        text = re.sub(r"[^\x00-\x7F]+", " ", text)
+        text = re.sub(r"\s+", " ", text)
+
+        # HARD FIX: break extremely long words
+        return " ".join([w if len(w) < 80 else w[:80] + "..." for w in text.split(" ")])
 
     for i, n in enumerate(notes):
         pdf.set_font("Arial", style="B", size=11)
@@ -203,22 +211,25 @@ def export_pdf(notes):
 
         pdf.set_font("Arial", size=10)
 
-        clean_text = re.sub(r"[^\x00-\x7F]+", " ", n)
+        for line in n.split("\n"):
+            line = clean_line(line)
 
-        for line in clean_text.split("\n"):
-            line = line.strip()
-            if line:
+            if not line.strip():
+                continue
+
+            try:
                 pdf.multi_cell(0, 6, line)
+            except:
+                # LAST RESORT: skip bad line instead of crashing
+                continue
 
         pdf.ln(3)
 
-    # ✅ IMPORTANT FIX: return BytesIO instead of encode()
     buffer = BytesIO()
     buffer.write(pdf.output(dest="S").encode("latin-1"))
     buffer.seek(0)
 
     return buffer
-
 # ───────────────────────── SIDEBAR ─────────────────────────
 with st.sidebar:
     st.title("🧠 StudyAI Pro")
