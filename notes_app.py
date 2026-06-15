@@ -1,10 +1,14 @@
 import streamlit as st
-import pymupdf as fitz  # PyMuPDF
+import fitz  # PyMuPDF
 import re
 import json
 import time
 import random
 import numpy as np
+from transformers import pipeline
+import torch
+import re
+
 from groq import Groq
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from sentence_transformers import SentenceTransformer
@@ -212,7 +216,8 @@ for k, v in {
     "chunks": [], "notes": [], "faiss_index": None, "embeddings_model": None,
     "chunk_embeddings": None, "chat_history": [], "mcq_data": [],
     "mcq_answers": {}, "mcq_submitted": False, "pdf_text": "",
-    "processing_done": False, "api_configured": False,
+    "processing_done": False, "api_configured": False, "groq_api_key": "",
+
 }.items():
     if k not in st.session_state:
         st.session_state[k] = v
@@ -243,53 +248,76 @@ def chunk_text(text: str):
     return splitter.split_text(text)
 
 
-def call_gemini(prompt: str, system: str = "") -> str:
-    client = st.session_state.client
-
-    response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
-        messages=[
-            {
-                "role": "system",
-                "content": system if system else "You are a helpful assistant."
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        temperature=0.3,
+@st.cache_resource
+def get_summarizer():
+    return pipeline(
+        "summarization",
+        model="sshleifer/distilbart-cnn-12-6",
     )
 
-    return response.choices[0].message.content
+
+def _truncate_for_summarizer(text: str, max_chars: int = 4500) -> str:
+    # DistilBART models can overflow with long inputs; truncate safely.
+    # Char-based truncation is deterministic and avoids tokenization overhead.
+    text = text.strip()
+    if len(text) <= max_chars:
+        return text
+    return text[:max_chars].strip()
+
+
+def call_gemini(prompt: str, system: str = "") -> str:
+    """Compatibility wrapper: uses Groq for chat/MCQ."""
+    client = Groq(api_key=st.session_state.groq_api_key)
+
+    messages = []
+    if system:
+        messages.append({"role": "system", "content": system})
+
+    messages.append({"role": "user", "content": prompt})
+
+    completion = client.chat.completions.create(
+        model="llama3-70b-8192",
+        messages=messages,
+        temperature=0.2,
+    )
+    return completion.choices[0].message.content
+
+
 
 
 def summarize_chunk(chunk: str) -> str:
-    system = (
-        "You are a structured note-taking assistant for exam revision. "
-        "Respond ONLY in strict Markdown with headings, bullet points, bold keywords, "
-        "code/formula backticks, and a summary table. No prose paragraphs ever."
+    """Generate exam revision notes COMPLETELY locally (no API calls)."""
+    summarizer = get_summarizer()
+
+    # Safe truncation to avoid model/input overflows.
+    chunk = _truncate_for_summarizer(chunk, max_chars=4500)
+
+    # DistilBART summarization is trained to generate concise summaries.
+    # We guide the output to resemble the existing expected Markdown format.
+    prompt = (
+        "Convert the following study material into structured exam revision notes. "
+        "Return ONLY strict Markdown. Use headings, bullet points, bold keywords, "
+        "inline code for formulas, and include a small quick recall table. "
+        "No prose paragraphs.\n\n"
+        f"MATERIAL:\n{chunk}"
     )
-    prompt = f"""Convert this study material into structured exam notes.
 
-MANDATORY FORMAT:
-# 🎯 MAIN TOPIC
-## 📌 Subtopic
-- **Term**: definition
-- Formula: `formula`
-## ⚡ Quick Recall Table
-| Term | Meaning |
-|------|---------|
-| X | Y |
+    # transformers pipeline returns: [{'summary_text': ...}]
+    out = summarizer(
+        prompt,
+        max_length=420,
+        min_length=60,
+        do_sample=False,
+        truncation=True,
+    )
+    summary = out[0]["summary_text"] if out and isinstance(out, list) and out else ""
 
-RULES: bullets only, bold every keyword, max 12 bullets, end with table.
+    return summary.strip()
 
-MATERIAL:
-{chunk}"""
-    return call_gemini(prompt, system)
 
 
 def generate_mcq(notes_text: str) -> list:
+
     prompt = f"""Generate exactly 10 multiple-choice questions from these exam notes.
 
 Return ONLY valid JSON — no markdown, no backticks, no explanation:
@@ -401,14 +429,15 @@ with st.sidebar:
     st.divider()
 
     api_key = st.text_input("Groq API Key", type="password", placeholder="gsk_...")
-
     if api_key:
-        st.session_state.client = Groq(api_key=api_key)
+        st.session_state.groq_api_key = api_key
         st.session_state.api_configured = True
         st.success("API key set ✓")
 
-    st.markdown("[Get free Groq API key →](https://console.groq.com/keys)")
+    st.markdown("[Get Groq API key →](https://console.groq.com/keys)", unsafe_allow_html=False)
+
     st.divider()
+
 
     uploaded = st.file_uploader("Upload PDF", type=["pdf"])
 
@@ -463,7 +492,9 @@ with st.sidebar:
 # ── Main area ─────────────────────────────────────────────────────────────────
 if not st.session_state.api_configured:
     st.markdown("""
+
     <div class="card-accent" style="text-align:center;padding:3rem;">
+
         <div style="font-size:48px;margin-bottom:1rem;">🧠</div>
         <h2 style="color:#E8EAF0;margin:0 0 8px;">StudyAI</h2>
         <p style="color:#9BA3B4;font-size:15px;max-width:400px;margin:0 auto;">
