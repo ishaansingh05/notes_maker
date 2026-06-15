@@ -188,6 +188,10 @@ Question: {q}
 
 
 # ───────────────────────── PDF EXPORT ─────────────────────────
+from io import BytesIO
+from fpdf import FPDF
+import re
+
 def export_pdf(notes):
     pdf = FPDF()
     pdf.add_page()
@@ -209,9 +213,8 @@ def export_pdf(notes):
         pdf.set_font("Arial", size=10)
 
         for line in n.split("\n"):
-            line = clean(line)
-
-            if not line.strip():
+            line = clean(line).strip()
+            if not line:
                 continue
 
             try:
@@ -221,11 +224,11 @@ def export_pdf(notes):
 
         pdf.ln(3)
 
-    # ✅ FIX: DO NOT encode manually
-    pdf_bytes = pdf.output(dest="S")
+    # ✅ CRITICAL FIX: DO NOT use dest="S" + encoding at all
+    # Instead directly write file into buffer safely
 
     buffer = BytesIO()
-    buffer.write(pdf_bytes if isinstance(pdf_bytes, bytes) else pdf_bytes.encode("latin-1"))
+    pdf.output(buffer)   # <-- THIS is the correct FPDF2 way
     buffer.seek(0)
 
     return buffer
