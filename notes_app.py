@@ -410,7 +410,7 @@ if api_key:
 st.markdown("[Get free Groq API key →](https://console.groq.com/keys)")
 st.divider()
 
-    uploaded = st.file_uploader("Upload PDF", type=["pdf"])
+uploaded = st.file_uploader("Upload PDF", type=["pdf"])
 
     if uploaded and st.session_state.api_configured:
         if st.button("⚡ Process PDF", use_container_width=True):
