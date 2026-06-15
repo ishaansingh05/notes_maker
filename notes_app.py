@@ -408,7 +408,7 @@ if api_key:
     st.success("API key set ✓")
 
 st.markdown("[Get free Groq API key →](https://console.groq.com/keys)")
-    st.divider()
+st.divider()
 
     uploaded = st.file_uploader("Upload PDF", type=["pdf"])
 
