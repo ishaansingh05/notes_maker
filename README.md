@@ -1,21 +1,19 @@
 <div align="center">
 
-# 📚 StudyAI: AI-Powered Study Assistant
+# 📚 ExamGuide: AI-Powered Study Assistant
 
-### *An Intelligent Retrieval-Augmented Generation (RAG) System for Exam Preparation*
-
-> **Powered by a complete RAG Pipeline that transforms PDFs into structured exam-ready notes, enables context-aware conversations through semantic retrieval, and reinforces learning with automatically generated MCQ quizzes.**
+### *An Intelligent Retrieval-Augmented Generation (RAG) System for Smart Exam Preparation*
 
 <p>
   <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white">
-  <img src="https://img.shields.io/badge/RAG%20Pipeline-Retrieval%20Augmented%20Generation-00C853?style=for-the-badge">
-  <img src="https://img.shields.io/badge/FAISS-Vector%20Database-blueviolet?style=for-the-badge">
-  <img src="https://img.shields.io/badge/SentenceTransformers-Semantic%20Embeddings-orange?style=for-the-badge">
-  <img src="https://img.shields.io/badge/LLM-AI%20Powered-red?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Streamlit-Web%20Application-FF4B4B?style=for-the-badge">
+  <img src="https://img.shields.io/badge/RAG-Retrieval%20Augmented%20Generation-00C853?style=for-the-badge">
+  <img src="https://img.shields.io/badge/FAISS-Vector%20Search-7B1FA2?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Sentence%20Transformers-all--MiniLM--L6--v2-orange?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Llama%203.1-8B%20Instant-red?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Streamlit-Interactive%20Web%20App-FF4B4B?style=for-the-badge">
 </p>
 
-### StudyAI is more than a notes generator—it is a complete AI learning companion that combines document understanding, semantic retrieval, conversational AI, and automated assessment into a single interactive platform.
+### Transform PDFs into structured exam-ready notes, chat intelligently with your documents through a Retrieval-Augmented Generation (RAG) pipeline, and strengthen learning with AI-generated quizzes.
 
 </div>
 
@@ -27,80 +25,135 @@
 <img src="assets/homepage.png" width="95%">
 </p>
 
-> Replace with the main screenshot of your application.
+> *Replace with the main application screenshot.*
 
 ---
 
 # Overview
 
-Studying from lengthy PDFs often involves manually extracting important concepts, creating notes, revising key topics, and testing understanding through practice questions. This repetitive workflow consumes significant time and frequently reduces learning efficiency.
+**ExamGuide** is an AI-powered study assistant designed to simplify and accelerate the learning process by combining **document understanding, semantic retrieval, prompt engineering, and large language models** into a single interactive platform.
 
-**StudyAI** automates this entire process through a **Retrieval-Augmented Generation (RAG) Pipeline**, allowing users to upload academic documents and instantly transform them into structured revision material while interacting with the content through natural language.
+Unlike conventional summarization tools that simply condense text, ExamGuide first builds a semantic understanding of uploaded documents and then leverages a **Retrieval-Augmented Generation (RAG) pipeline** to generate context-aware outputs.
 
-Unlike conventional summarization tools, StudyAI first understands the document, builds a semantic knowledge base, retrieves relevant information based on meaning rather than keywords, and then generates context-aware responses grounded in the uploaded material.
+The application enables users to:
 
-The result is an intelligent study assistant capable of supporting every stage of exam preparation—from note generation and doubt solving to self-assessment and revision.
+- Generate structured, exam-oriented revision notes
+- Chat with uploaded PDFs using semantic retrieval
+- Ask questions grounded in document context
+- Practice with automatically generated MCQ quizzes
+- Export notes as PDF for offline revision
+
+By integrating retrieval with generation, ExamGuide provides a significantly more reliable and personalized learning experience than standalone language models.
 
 ---
 
-# **Retrieval-Augmented Generation (RAG) Pipeline**
+# Core AI Technologies
 
-The foundation of StudyAI is a **Retrieval-Augmented Generation (RAG) Pipeline**, designed to overcome the limitations of standalone language models by combining semantic retrieval with generative AI.
+ExamGuide combines multiple modern AI concepts into a unified workflow:
 
-Instead of relying only on pretrained knowledge, the system retrieves the most relevant information from the uploaded document before generating a response.
+- **Retrieval-Augmented Generation (RAG)**
+- **Semantic Search**
+- **Prompt Engineering**
+- **Dense Vector Embeddings**
+- **FAISS Vector Indexing**
+- **Sentence Transformers**
+- **Large Language Models (LLMs)**
+- **Document Grounding**
+- **AI-Generated Exam Notes**
+- **Automatic MCQ Generation**
 
-The complete RAG workflow consists of:
+Rather than functioning as a simple chatbot, the system operates as a complete AI-powered study companion capable of understanding, retrieving, explaining, and evaluating educational content.
 
-- PDF text extraction
-- Intelligent document chunking
-- Semantic embedding generation
-- FAISS vector indexing
-- Similarity-based retrieval
-- Context injection into the language model
-- AI-generated context-aware responses
+---
 
-By grounding every answer in the uploaded document, the system produces responses that are significantly more reliable, relevant, and personalized for the user's study material.
+# LLM & AI Models Used
 
+ExamGuide integrates multiple specialized AI models, each responsible for a different stage of the pipeline.
 
-#**RAG Pipeline Architecture**
+### 🧠 Large Language Model
+
+The application uses **Meta's Llama 3.1 8B Instant** through the **Groq API** for:
+
+- Exam-ready note generation
+- Context-aware question answering
+- Multiple-choice question generation
+- Educational content formatting
+
+The model operates with a **low temperature (0.2)** to produce more deterministic, consistent, and reliable outputs suitable for academic use.
+
+---
+
+### 🔍 Embedding Model
+
+Semantic representations are generated using:
+
+**Sentence Transformers – `all-MiniLM-L6-v2`**
+
+Every document chunk is converted into a dense vector embedding that captures semantic meaning rather than exact keywords.
+
+These embeddings enable meaning-based retrieval throughout the RAG pipeline.
+
+---
+
+# Why ExamGuide?
+
+Most AI note generators produce summaries without actually understanding the underlying document.
+
+ExamGuide instead implements a **Retrieval-Augmented Generation (RAG) architecture**, allowing the language model to retrieve relevant information before generating responses.
+
+This results in:
+
+- Better factual consistency
+- Reduced hallucinations
+- Context-aware answers
+- Personalized explanations
+- Interactive learning instead of passive summarization
+
+The uploaded document effectively becomes the knowledge base from which the AI reasons.
+
+---
+
+# **How the RAG Engine Works**
+
+At the heart of ExamGuide lies a complete **Retrieval-Augmented Generation (RAG) engine**.
+
+Rather than answering directly from pretrained knowledge, every question follows a semantic retrieval process before generation.
+
+The workflow consists of:
+
+1. Converting the user's question into an embedding.
+2. Searching the FAISS vector database using cosine similarity.
+3. Retrieving the **three most relevant document chunks**.
+4. Supplying retrieved context to the language model.
+5. Generating a context-grounded response.
+
+This architecture ensures that responses remain closely tied to the uploaded study material rather than relying purely on model memory.
+
+---
+
+# Semantic Retrieval Pipeline
 
 ```text
-              User Question
-                    │
-                    ▼
-      Convert Query to Embedding
-                    │
-                    ▼
-      Semantic Similarity Search
-           (FAISS Vector Store)
-                    │
-                    ▼
-     Retrieve Most Relevant Chunks
-                    │
-                    ▼
-      Context + User Prompt + LLM
-                    │
-                    ▼
-      Context-Aware AI Response
+                 User Question
+                        │
+                        ▼
+         Sentence Transformer Encoding
+                        │
+                        ▼
+          Generate Query Embedding
+                        │
+                        ▼
+          FAISS Cosine Similarity Search
+                        │
+                        ▼
+         Retrieve Top 3 Relevant Chunks
+                        │
+                        ▼
+        Context + User Prompt + LLM
+                        │
+                        ▼
+          Context-Aware AI Response
 ```
-      
----
-
-# Why StudyAI?
-
-StudyAI is designed as an end-to-end AI learning platform rather than a simple summarization tool.
-
-It combines multiple AI capabilities into a unified workflow:
-
-- **RAG-powered contextual question answering**
-- **AI-generated exam-ready notes**
-- **Semantic search using dense vector embeddings**
-- **Interactive chatbot grounded in uploaded PDFs**
-- **Automatic MCQ quiz generation**
-- **Performance evaluation and scoring**
-- **Exportable notes for offline revision**
-
-This integrated approach encourages active learning while dramatically reducing the effort required to prepare for examinations.
 
 ---
 
@@ -108,117 +161,180 @@ This integrated approach encourages active learning while dramatically reducing 
 
 ## AI-Generated Exam Notes
 
-Transform lengthy academic documents into structured revision material optimized for examination preparation.
+ExamGuide automatically transforms lengthy PDFs into structured revision notes optimized for examination preparation.
 
-Instead of producing generic summaries, StudyAI organizes information into concise, readable, and hierarchical notes that emphasize the concepts most likely to matter during revision.
+Instead of generic summaries, carefully engineered prompts instruct the language model to produce:
 
----
+- Hierarchical headings
+- Organized bullet points
+- Highlighted key concepts
+- Exam-focused formatting
+- Tables whenever appropriate
 
-## **RAG-Powered Conversational AI**
-
-At the heart of StudyAI lies a **Retrieval-Augmented Generation (RAG) Pipeline**.
-
-Whenever a user asks a question:
-
-1. The query is converted into an embedding.
-2. FAISS retrieves the most semantically relevant document chunks.
-3. Retrieved context is supplied to the language model.
-4. The model generates a response grounded in the uploaded study material.
-
-This architecture significantly reduces hallucinations while producing highly contextual and document-specific answers.
+The generated notes are concise, readable, and designed specifically for efficient revision.
 
 ---
 
-## Semantic Search with FAISS
+## Prompt Engineering
 
-Every uploaded PDF is converted into dense vector representations using Sentence Transformers.
+High-quality educational content requires more than simply passing text to an LLM.
 
-These embeddings are stored inside a FAISS vector database, enabling similarity search based on meaning rather than exact keyword matches.
+ExamGuide uses carefully designed prompt templates that instruct the model to:
 
-As a result, users can ask natural language questions and still retrieve the most relevant portions of their study material.
+- Prioritize important concepts
+- Organize information logically
+- Produce revision-friendly notes
+- Format outputs consistently
+- Generate valid JSON for MCQ creation
+- Maintain educational relevance throughout generation
 
----
-
-## Interactive AI Tutor
-
-StudyAI allows users to converse naturally with their documents.
-
-Whether requesting explanations, clarifications, definitions, or deeper insights, the chatbot retrieves relevant information before generating its response, creating an experience similar to interacting with a knowledgeable tutor.
-
----
-
-## Automated MCQ Generation
-
-To reinforce learning, StudyAI automatically generates multiple-choice questions based on the generated notes.
-
-These quizzes encourage active recall, identify weak areas, and provide immediate evaluation to improve retention.
+These prompts significantly improve output quality and consistency compared to generic prompting.
 
 ---
 
-## PDF Export
+## Intelligent Document Processing
 
-Generated notes can be exported as PDF documents, allowing students to retain organized revision material for offline study and future reference.
+Before any AI generation begins, uploaded PDFs undergo multiple preprocessing stages.
 
-# System Workflow
+The pipeline performs:
+
+- Text extraction using **PyMuPDF**
+- Cleaning and whitespace normalization
+- Intelligent recursive chunking
+- Context preservation through overlapping chunks
+
+The use of overlapping chunks helps maintain semantic continuity between neighboring sections of the document.
+
+---
+
+## Semantic Embedding Generation
+
+Every chunk is encoded using the **all-MiniLM-L6-v2 Sentence Transformer model**.
+
+Instead of keyword matching, embeddings capture semantic meaning, allowing conceptually similar passages to be retrieved even when different wording is used.
+
+This significantly improves retrieval quality for natural language questions.
+
+---
+
+## FAISS-Powered Vector Search
+
+Generated embeddings are converted to float32, **L2-normalized**, and indexed using **FAISS IndexFlatIP**.
+
+This implementation enables efficient cosine similarity retrieval over the entire document and serves as the retrieval backbone of the RAG pipeline.
+
+Rather than searching by exact keywords, the system searches by meaning.
+
+---
+
+## Context-Aware AI Chat
+
+For every user question, ExamGuide:
+
+- Converts the query into a semantic embedding
+- Searches the FAISS vector database
+- Retrieves the three most relevant chunks
+- Injects retrieved context into the LLM prompt
+- Produces a document-grounded response
+
+This retrieval-first strategy greatly improves factual accuracy and contextual relevance.
+
+---
+
+## AI-Generated MCQ Quizzes
+
+Beyond note generation, ExamGuide automatically creates multiple-choice quizzes from the processed study material.
+
+The LLM is prompted to return quiz data in structured JSON format, enabling seamless parsing, automatic scoring, and interactive self-assessment.
+
+These quizzes encourage active recall and reinforce long-term retention.
+
+---
+
+# End-to-End AI Pipeline
 
 ```text
-                     User Uploads PDF
-                             │
-                             ▼
-                  PDF Text Extraction
-                             │
-                             ▼
-                  Text Cleaning & Processing
-                             │
-                             ▼
-                    Intelligent Chunking
-                             │
-            ┌────────────────┴────────────────┐
-            │                                 │
-            ▼                                 ▼
-   Generate Exam Notes          Generate Sentence Embeddings
-            │                                 │
-            │                                 ▼
-            │                    Build FAISS Vector Index
-            │                                 │
-            │                                 │
-            ▼                                 ▼
-     Export Notes as PDF           User Asks a Question
-                                              │
-                                              ▼
-                                  Convert Query to Embedding
-                                              │
-                                              ▼
-                                Retrieve Similar Chunks (FAISS)
-                                              │
-                                              ▼
-                              Pass Context + Query to LLM
-                                              │
-                                              ▼
-                               Generate Context-Aware Answer
-                                              │
-                                              ▼
-                             AI Chat + MCQ Quiz Generation
+                    Upload PDF
+                         │
+                         ▼
+              Extract Text (PyMuPDF)
+                         │
+                         ▼
+             Clean & Normalize Content
+                         │
+                         ▼
+          Recursive Character Chunking
+                 (2000 / 200 overlap)
+                         │
+                         ▼
+     Generate Sentence Embeddings
+       (all-MiniLM-L6-v2 Model)
+                         │
+                         ▼
+        L2 Normalization + FAISS Index
+                         │
+          ┌──────────────┼───────────────┐
+          │              │               │
+          ▼              ▼               ▼
+   Exam Notes      AI Chat (RAG)     MCQ Generator
+          │              │               │
+          ▼              ▼               ▼
+   PDF Export     Top-3 Chunk       JSON Quiz
+                   Retrieval         Generation
 ```
+
+---
+
+# Application Showcase
+
+## Home Interface
+
+<p align="center">
+<img src="assets/homepage.png" width="92%">
+</p>
+
+---
+
+## Exam Notes
+
+<p align="center">
+<img src="assets/notes.png" width="92%">
+</p>
+
+---
+
+## AI Chat
+
+<p align="center">
+<img src="assets/chat.png" width="92%">
+</p>
+
+---
+
+## MCQ Quiz
+
+<p align="center">
+<img src="assets/quiz.png" width="92%">
+</p>
+
+The application seamlessly combines semantic retrieval, prompt engineering, and large language models into a unified workflow that supports note generation, contextual question answering, and active learning through automated assessment.
 # Installation
 
 ## Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/StudyAI.git
+git clone https://github.com/YOUR_USERNAME/ExamGuide.git
 ```
 
 Navigate to the project directory:
 
 ```bash
-cd StudyAI
+cd ExamGuide
 ```
 
 ---
 
 ## Install Dependencies
-
-Install all required packages using:
 
 ```bash
 pip install -r requirements.txt
@@ -226,89 +342,169 @@ pip install -r requirements.txt
 
 ---
 
-## Run the Application
-
-Launch the Streamlit application:
+## Launch the Application
 
 ```bash
 streamlit run app.py
 ```
 
-Once started, the application will automatically open in your browser.
+The application will open locally in your default web browser.
 
-Alternatively, you can use the deployed version directly:
+Alternatively, you can access the deployed version on Streamlit:
 
-**Live Demo:**  
-`https://your-streamlit-link-here`
-
----
-
-# Usage
-
-### 1. Upload a PDF
-
-Begin by uploading your study material or lecture notes in PDF format.
+**🔗 Live Demo:**  
+`https://your-streamlit-app-url`
 
 ---
 
-### 2. AI Processing
+# How It Works
 
-The application automatically:
+1. The user uploads a PDF containing study material.
 
-- Extracts text from the document
-- Cleans and preprocesses the content
-- Splits it into semantic chunks
-- Generates dense vector embeddings
-- Builds a FAISS vector database
-- Creates structured exam-ready notes
+2. PyMuPDF extracts the text from the document.
 
----
+3. The extracted text is cleaned and normalized to remove unnecessary formatting.
 
-### 3. Read Exam Notes
+4. The document is divided into overlapping chunks using `RecursiveCharacterTextSplitter` to preserve contextual continuity.
 
-Review concise, organized notes that highlight the most important concepts from the uploaded material.
+5. Each chunk is converted into a dense semantic embedding using the `all-MiniLM-L6-v2` Sentence Transformer model.
 
----
+6. The embeddings are L2-normalized and indexed using FAISS (`IndexFlatIP`) for efficient cosine similarity search.
 
-### 4. Chat with Your Document
+7. Depending on the selected feature:
+   - The LLM generates structured exam-ready notes.
+   - The top three semantically relevant chunks are retrieved to answer user queries through the RAG pipeline.
+   - The LLM generates multiple-choice questions in structured JSON format for interactive quizzes.
 
-Ask questions in natural language.
-
-The RAG pipeline retrieves the most relevant sections from your uploaded PDF before generating an answer, ensuring responses remain grounded in your study material.
+8. Generated notes can be exported as a PDF for offline revision.
 
 ---
 
-### 5. Test Yourself
+# Technical Implementation
 
-Generate AI-powered MCQ quizzes based on the processed notes and evaluate your understanding with instant feedback.
+## Document Processing
+
+Every uploaded PDF undergoes a preprocessing pipeline before AI generation begins.
+
+The system:
+
+- Extracts text using **PyMuPDF**
+- Removes unnecessary whitespace and formatting artifacts
+- Normalizes document structure
+- Splits content using **RecursiveCharacterTextSplitter**
+- Preserves contextual continuity through overlapping chunks
+
+The chunking strategy uses:
+
+- **Chunk Size:** 2000 characters
+- **Chunk Overlap:** 200 characters
+
+This overlap helps retain relationships between adjacent sections and improves retrieval quality.
 
 ---
 
-### 6. Export Notes
+## Semantic Embedding Generation
 
-Download generated notes as a PDF for offline revision and future reference.
+Each chunk is transformed into a dense vector representation using:
+
+**Sentence Transformers – `all-MiniLM-L6-v2`**
+
+Unlike keyword matching, embeddings capture semantic meaning, enabling the system to retrieve conceptually relevant passages even when wording differs.
+
+These embeddings form the knowledge base for retrieval.
 
 ---
 
-# Project Structure
+## Vector Database & Similarity Search
 
-```text
-StudyAI/
-│
-├── app.py
-├── requirements.txt
-├── README.md
-├── assets/
-│   ├── homepage.png
-│   ├── notes.png
-│   ├── chat.png
-│   ├── quiz.png
-│   └── architecture.png
-│
-├── uploads/
-├── vector_store/
-└── temp/
-```
+Generated embeddings are:
+
+- Converted to `float32`
+- L2 normalized
+- Indexed using **FAISS IndexFlatIP**
+
+This implementation effectively performs cosine similarity search and enables rapid semantic retrieval across the uploaded document.
+
+When a user asks a question:
+
+1. The query is embedded.
+2. FAISS searches the vector index.
+3. The **three most relevant chunks** are retrieved.
+4. Retrieved context is injected into the LLM prompt.
+
+This retrieval-first approach significantly improves contextual relevance while minimizing hallucinations.
+
+---
+
+## Large Language Model Integration
+
+ExamGuide uses:
+
+**Meta Llama 3.1 8B Instant**  
+**Served through the Groq API**
+
+The LLM powers:
+
+- Exam note generation
+- Context-aware question answering
+- Multiple-choice question creation
+
+Generation is performed with a **temperature of 0.2**, producing more deterministic and academically consistent outputs.
+
+---
+
+## Prompt Engineering Strategy
+
+Rather than relying on generic prompting, ExamGuide uses specialized prompt templates tailored for educational tasks.
+
+### Notes Generation
+
+The model is instructed to produce:
+
+- Structured headings
+- Bullet points
+- Highlighted key concepts
+- Tables whenever appropriate
+- Revision-friendly formatting
+
+Instead of simple summaries, outputs resemble curated study notes.
+
+### Question Answering
+
+The chatbot receives:
+
+- Retrieved document context
+- User question
+
+and is explicitly instructed to answer **only using the supplied context**, ensuring responses remain grounded in the uploaded material.
+
+### MCQ Generation
+
+The model generates quizzes in **strict JSON format**, enabling:
+
+- Automatic parsing
+- Interactive radio-button quizzes
+- Instant evaluation
+- Accurate score calculation
+
+This structured prompting improves reliability and simplifies downstream processing.
+
+---
+
+# Why Retrieval-Augmented Generation?
+
+Traditional language models answer primarily from pretrained knowledge, which can lead to hallucinations or responses unrelated to the uploaded material.
+
+ExamGuide instead implements a complete **Retrieval-Augmented Generation (RAG) pipeline**.
+
+Before generating an answer:
+
+- The question is embedded.
+- Similar document chunks are retrieved.
+- Retrieved context is attached to the prompt.
+- The language model reasons over that context.
+
+This architecture enables responses that are grounded in the user's own study material rather than relying solely on model memory.
 
 ---
 
@@ -324,107 +520,88 @@ StudyAI/
 
 ## Large Language Model
 
+- Meta Llama 3.1 8B Instant
 - Groq API
-- Llama 3
 
-## Retrieval-Augmented Generation
+## Embedding Model
 
-- FAISS Vector Database
-- Sentence Transformers
-- Semantic Similarity Search
+- Sentence Transformers (`all-MiniLM-L6-v2`)
 
-## Natural Language Processing
+## Retrieval System
 
-- LangChain Text Splitters
-- Context Retrieval
-- Embedding Generation
+- FAISS
+- IndexFlatIP
+- Cosine Similarity Search
 
-## PDF Processing
+## Document Processing
 
-- PyMuPDF (fitz)
+- PyMuPDF
+- RecursiveCharacterTextSplitter
 
 ## Data Processing
 
 - NumPy
 
-## Visualization
-
-- Matplotlib
-
-## Document Generation
+## PDF Generation
 
 - FPDF
 
----
+## State Management
 
-# Core AI Technologies
-
-StudyAI integrates multiple modern AI techniques into a single application:
-
-- **Retrieval-Augmented Generation (RAG)**
-- **Semantic Search**
-- **Vector Embeddings**
-- **Dense Vector Indexing with FAISS**
-- **Context-Aware Conversational AI**
-- **Large Language Models**
-- **Automatic Note Generation**
-- **AI-Powered Quiz Generation**
-- **Document Grounding**
-- **Interactive Learning**
-
-Together, these components enable StudyAI to move beyond traditional summarization and function as an intelligent learning companion.
+- Streamlit Session State
 
 ---
 
-# Why Retrieval-Augmented Generation?
+# Project Structure
 
-Traditional language models answer questions based solely on their pretrained knowledge, which may lead to hallucinations or outdated information.
-
-StudyAI addresses this challenge through a **Retrieval-Augmented Generation (RAG) Pipeline**.
-
-Before generating a response, the system:
-
-1. Searches the uploaded document semantically.
-2. Retrieves the most relevant chunks.
-3. Injects that context into the language model.
-4. Produces an answer grounded in the user's own study material.
-
-This significantly improves factual consistency and ensures responses remain personalized to the uploaded document.
+```text
+ExamGuide/
+│
+├── app.py
+├── requirements.txt
+├── README.md
+│
+├── assets/
+│   ├── homepage.png
+│   ├── notes.png
+│   ├── chat.png
+│   ├── quiz.png
+│   └── architecture.png
+│
+└── temp/
+```
 
 ---
 
-# Advantages of StudyAI
+# Key Advantages
 
-Compared to conventional note-taking or summarization tools, StudyAI offers several advantages:
+Compared to conventional AI note generators, ExamGuide offers:
 
-| Traditional Tools | StudyAI |
-|-------------------|----------|
-| Static summaries | Dynamic AI-generated notes |
-| Keyword search | Semantic search |
-| No contextual understanding | RAG-powered contextual retrieval |
-| No interaction | Conversational AI assistant |
-| Manual quiz preparation | Automatic MCQ generation |
-| Passive learning | Active learning through chat and quizzes |
-| Fixed documents | Personalized document understanding |
+| Traditional Summarizers | ExamGuide |
+|-------------------------|-----------|
+| Static summaries | Interactive AI study assistant |
+| Keyword search | Semantic vector retrieval |
+| Generic chatbot | Context-grounded RAG chatbot |
+| Passive reading | Active learning through quizzes |
+| Manual revision | AI-generated exam notes |
+| No personalization | Answers based on uploaded PDFs |
+| Limited understanding | Semantic document comprehension |
 
 ---
 
 # Future Enhancements
 
-StudyAI has been designed with extensibility in mind.
+The architecture is designed to be extensible and can be expanded with:
 
-Potential future improvements include:
-
-- Multi-PDF knowledge bases
-- OCR support for scanned documents
-- Image and diagram understanding
-- Citation-aware answers
+- Multi-document knowledge bases
+- OCR support for scanned PDFs
 - Flashcard generation
-- Adaptive quizzes based on user performance
-- Voice-based interaction
-- Study progress tracking
+- Adaptive quizzes based on performance
+- Citation-aware answers
+- Voice interaction
 - Personalized revision schedules
-- Multi-language support
+- Image and diagram understanding
+- Multi-language document support
 
 ---
 
@@ -434,73 +611,35 @@ This project demonstrates practical implementation of:
 
 - Retrieval-Augmented Generation (RAG)
 - Semantic Search
+- Vector Embeddings
 - FAISS Vector Databases
-- Sentence Embeddings
-- Document Understanding
-- Large Language Model Integration
-- Conversational AI
 - Prompt Engineering
-- Context Retrieval
-- Exam-Oriented AI Systems
+- Large Language Models
+- Sentence Transformers
+- Context-Aware Conversational AI
+- AI-Powered Note Generation
+- Automated Quiz Generation
 - PDF Processing
 - Interactive Web Applications
 
-It showcases how modern AI techniques can be combined to create an end-to-end intelligent learning platform rather than a standalone summarization tool.
-
----
-
-# Who Is It For?
-
-StudyAI is designed for:
-
-- Students preparing for examinations
-- University learners
-- Competitive exam aspirants
-- Researchers reviewing academic papers
-- Professionals studying technical documentation
-- Anyone who wants to interact with documents instead of simply reading them
-
----
-
-# License
-
-This project is released under the MIT License.
-
-You are free to use, modify, and distribute it in accordance with the license terms.
-
----
-
-# Acknowledgements
-
-This project builds upon advancements in:
-
-- Retrieval-Augmented Generation (RAG)
-- Sentence Transformers
-- FAISS Vector Search
-- Large Language Models
-- Streamlit
-- Modern NLP research
+It showcases how modern retrieval systems and language models can be integrated into a complete educational platform rather than functioning as isolated AI components.
 
 ---
 
 # Disclaimer
 
-StudyAI is intended for educational and research purposes.
+ExamGuide is intended for educational and research purposes.
 
-While it strives to provide accurate and context-aware responses, generated notes and answers should be verified against original source material, particularly in academic or professional settings.
+While it provides context-aware notes and answers based on uploaded documents, users should always verify generated content against original study material when preparing for examinations or academic work.
 
 ---
 
 <div align="center">
 
-# StudyAI
+## ⭐ If you found this project useful, consider giving it a star!
 
-### **An AI-Powered Study Assistant built around a complete Retrieval-Augmented Generation (RAG) Pipeline**
+### **ExamGuide: AI-Powered Study Assistant**
 
-*Upload PDFs • Generate Exam-Ready Notes • Chat with Your Documents • Practice with AI-Generated MCQs*
-
----
-
-If you found this project useful, consider giving it a ⭐ to support its development.
+*Built using Retrieval-Augmented Generation (RAG), Semantic Search, Prompt Engineering, FAISS Vector Search, and Meta Llama 3.1 8B Instant to transform static PDFs into an intelligent, interactive learning experience.*
 
 </div>
