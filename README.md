@@ -460,43 +460,9 @@ This system can be extended into a production-grade AI learning platform.
 
 ---
 
-### 3. Advanced Retrieval Ranking
-- Add reranking models for better chunk selection
-- Improve context precision in QA system
-
----
-
-### 4. Streaming Responses
-- Real-time token streaming in chat interface
-- Better UX for long answers
-
----
-
-### 5. Adaptive MCQ Difficulty System
-- Dynamic difficulty based on user performance
-- Personalized learning paths
-
----
-
-### 6. AI-Powered Study Assistant Expansion
+### 3. AI-Powered Study Assistant Expansion
 - Voice-based Q&A system
 - Smart revision scheduler
-- Auto-generated revision summaries
-
----
-
-### 7. Deployment Enhancements
-- Streamlit Cloud / HuggingFace Spaces deployment
-- Dockerized production build
-
----
-
-## ⚠️ System Constraints Summary
-
-- Designed for single-user session usage
-- Optimized for speed over full-document reasoning
-- Depends on external LLM API (Groq)
-- No offline AI inference capability
 
 ---
 
