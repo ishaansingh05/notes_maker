@@ -23,7 +23,12 @@ The system enables:
 - Automated MCQ generation and evaluation  
 - Exportable study material  
 
-It is built on a **retrieval-augmented semantic search pipeline combined with large language model reasoning**, ensuring responses are grounded in the uploaded document rather than generated from memory.
+It automates this entire process through a **Retrieval-Augmented Generation (RAG) Pipeline**, allowing users to upload academic documents and instantly transform them into structured revision material while interacting with the content through natural language.
+
+Unlike conventional summarization tools, ExamGuide first understands the document, builds a semantic knowledge base, retrieves relevant information based on meaning rather than keywords, and then generates context-aware responses grounded in the uploaded material.
+
+The result is an intelligent study assistant capable of supporting every stage of exam preparation—from note generation and doubt solving to self-assessment and revision.
+
 <p align="center">
   <img src="assets/homepage1.png" width="85%">
 </p>
@@ -139,8 +144,39 @@ Unlike a linear flowchart, the system is designed as a **multi-stage retrieval +
         
 
 ```
+# **Retrieval-Augmented Generation (RAG) Pipeline**
 
----
+The foundation of StudyAI is a **Retrieval-Augmented Generation (RAG) Pipeline**, designed to overcome the limitations of standalone language models by combining semantic retrieval with generative AI.
+
+Instead of relying only on pretrained knowledge, the system retrieves the most relevant information from the uploaded document before generating a response.
+The complete RAG workflow consists of:
+
+- PDF text extraction
+- Intelligent document chunking
+- Semantic embedding generation
+- FAISS vector indexing
+- Similarity-based retrieval
+- Context injection into the language model
+- AI-generated context-aware responses
+  ```text
+                User Question
+                    │
+                    ▼
+      Convert Query to Embedding
+                    │
+                    ▼
+      Semantic Similarity Search
+           (FAISS Vector Store)
+                    │
+                    ▼
+     Retrieve Most Relevant Chunks
+                    │
+                    ▼
+      Context + User Prompt + LLM
+                    │
+                    ▼
+      Context-Aware AI Response
+  ```
 
 ## 🧠 Prompt Engineering (System Design Perspective)
 
