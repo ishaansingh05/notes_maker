@@ -1,645 +1,485 @@
-<div align="center">
-
-# 📚 ExamGuide: AI-Powered Study Assistant
-
-### *An Intelligent Retrieval-Augmented Generation (RAG) System for Smart Exam Preparation*
-
-<p>
-  <img src="https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white">
-  <img src="https://img.shields.io/badge/RAG-Retrieval%20Augmented%20Generation-00C853?style=for-the-badge">
-  <img src="https://img.shields.io/badge/FAISS-Vector%20Search-7B1FA2?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Sentence%20Transformers-all--MiniLM--L6--v2-orange?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Llama%203.1-8B%20Instant-red?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Streamlit-Interactive%20Web%20App-FF4B4B?style=for-the-badge">
-</p>
-
-### Transform PDFs into structured exam-ready notes, chat intelligently with your documents through a Retrieval-Augmented Generation (RAG) pipeline, and strengthen learning with AI-generated quizzes.
-
-</div>
+# 🧠 Exam Guide — AI-Powered Study Assistant
 
 ---
-
-# Project Preview
 
 <p align="center">
-<img src="assets/homepage.png" width="95%">
+
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-Web%20App-red)
+![Groq](https://img.shields.io/badge/Groq-Llama%203.1-orange)
+![FAISS](https://img.shields.io/badge/FAISS-Vector%20Search-purple)
+
 </p>
 
-> *Replace with the main application screenshot.*
+---
+
+## 📌 Overview
+
+**Exam Guide** is an AI-powered document intelligence system designed to transform unstructured PDF content into an interactive learning environment.
+
+The system enables:
+- Structured exam note generation  
+- Context-aware question answering  
+- Automated MCQ generation and evaluation  
+- Exportable study material  
+
+It is built on a **retrieval-augmented semantic search pipeline combined with large language model reasoning**, ensuring responses are grounded in the uploaded document rather than generated from memory.
+<p align="center">
+  <img src="assets/homepage1.png" width="85%">
+</p>
+---
+
+## ⚙️ System Requirements
+
+### 🔑 Groq API Key (Mandatory)
+
+A valid Groq API key is required to enable LLM-based features.
+
+- Entered via the Streamlit sidebar  
+- Required for:
+  - Notes generation  
+  - Chat system  
+  - MCQ generation  
+
+Without it, the system operates only as a document viewer.
 
 ---
 
-# Overview
+## 📄 Document Processing Strategy
 
-**ExamGuide** is an AI-powered study assistant designed to simplify and accelerate the learning process by combining **document understanding, semantic retrieval, prompt engineering, and large language models** into a single interactive platform.
+When a PDF is uploaded, the system follows a controlled processing pipeline:
 
-Unlike conventional summarization tools that simply condense text, ExamGuide first builds a semantic understanding of uploaded documents and then leverages a **Retrieval-Augmented Generation (RAG) pipeline** to generate context-aware outputs.
-
-The application enables users to:
-
-- Generate structured, exam-oriented revision notes
-- Chat with uploaded PDFs using semantic retrieval
-- Ask questions grounded in document context
-- Practice with automatically generated MCQ quizzes
-- Export notes as PDF for offline revision
-
-By integrating retrieval with generation, ExamGuide provides a significantly more reliable and personalized learning experience than standalone language models.
+### Step 1: Text Extraction
+- Extracted using PyMuPDF (`fitz`)
+- Raw text is cleaned (whitespace normalization, line merging)
 
 ---
 
-# Core AI Technologies
+### Step 2: Controlled Chunking Strategy
 
-ExamGuide combines multiple modern AI concepts into a unified workflow:
+The document is split using:
 
-- **Retrieval-Augmented Generation (RAG)**
-- **Semantic Search**
-- **Prompt Engineering**
-- **Dense Vector Embeddings**
-- **FAISS Vector Indexing**
-- **Sentence Transformers**
-- **Large Language Models (LLMs)**
-- **Document Grounding**
-- **AI-Generated Exam Notes**
-- **Automatic MCQ Generation**
+- `chunk_size = 2000 tokens (approx)`
+- `chunk_overlap = 200`
+- Maximum processing limit:
+  MAX_CHUNKS_TO_PROCESS = 5
+  
+### Why this matters:
+- Prevents API overload
+- Ensures fast inference
+- Reduces embedding + LLM cost
+- Keeps retrieval focused on high-signal sections
 
-Rather than functioning as a simple chatbot, the system operates as a complete AI-powered study companion capable of understanding, retrieving, explaining, and evaluating educational content.
-
----
-
-# LLM & AI Models Used
-
-ExamGuide integrates multiple specialized AI models, each responsible for a different stage of the pipeline.
-
-### 🧠 Large Language Model
-
-The application uses **Meta's Llama 3.1 8B Instant** through the **Groq API** for:
-
-- Exam-ready note generation
-- Context-aware question answering
-- Multiple-choice question generation
-- Educational content formatting
-
-The model operates with a **low temperature (0.2)** to produce more deterministic, consistent, and reliable outputs suitable for academic use.
+Only the **first 5 chunks** are processed for downstream tasks.
 
 ---
 
-### 🔍 Embedding Model
+### Step 3: Embedding & Indexing
 
-Semantic representations are generated using:
+- Model: `all-MiniLM-L6-v2`
+- Embeddings are normalized (L2 normalization)
+- Stored in FAISS IndexFlatIP (cosine similarity equivalent)
 
-**Sentence Transformers – `all-MiniLM-L6-v2`**
-
-Every document chunk is converted into a dense vector embedding that captures semantic meaning rather than exact keywords.
-
-These embeddings enable meaning-based retrieval throughout the RAG pipeline.
-
----
-
-# Why ExamGuide?
-
-Most AI note generators produce summaries without actually understanding the underlying document.
-
-ExamGuide instead implements a **Retrieval-Augmented Generation (RAG) architecture**, allowing the language model to retrieve relevant information before generating responses.
-
-This results in:
-
-- Better factual consistency
-- Reduced hallucinations
-- Context-aware answers
-- Personalized explanations
-- Interactive learning instead of passive summarization
-
-The uploaded document effectively becomes the knowledge base from which the AI reasons.
+This enables:
+- Fast semantic search
+- Efficient similarity retrieval
+- Lightweight vector storage
 
 ---
 
-# **How the RAG Engine Works**
+## 🧠 System Architecture 
 
-At the heart of ExamGuide lies a complete **Retrieval-Augmented Generation (RAG) engine**.
+Unlike a linear flowchart, the system is designed as a **multi-stage retrieval + generation pipeline with branching execution paths**.
 
-Rather than answering directly from pretrained knowledge, every question follows a semantic retrieval process before generation.
 
-The workflow consists of:
-
-1. Converting the user's question into an embedding.
-2. Searching the FAISS vector database using cosine similarity.
-3. Retrieving the **three most relevant document chunks**.
-4. Supplying retrieved context to the language model.
-5. Generating a context-grounded response.
-
-This architecture ensures that responses remain closely tied to the uploaded study material rather than relying purely on model memory.
-
----
-
-# Semantic Retrieval Pipeline
-
+## Architecture Diagram
 ```text
-                 User Question
-                        │
-                        ▼
-         Sentence Transformer Encoding
-                        │
-                        ▼
-          Generate Query Embedding
-                        │
-                        ▼
-          FAISS Cosine Similarity Search
-                        │
-                        ▼
-         Retrieve Top 3 Relevant Chunks
-                        │
-                        ▼
-        Context + User Prompt + LLM
-                        │
-                        ▼
-          Context-Aware AI Response
+                     ┌─────────────────────┐
+                     │     PDF Upload      │
+                     └─────────┬───────────┘
+                               │
+                               ▼
+                 ┌──────────────────────────┐
+                 │  PyMuPDF Text Extraction │
+                 └─────────┬────────────────┘
+                               │
+                               ▼
+              ┌──────────────────────────────┐
+              │ Text Cleaning & Normalization│
+              └─────────┬────────────────────┘
+                               │
+                               ▼
+     ┌────────────────────────────────────────────┐
+     │ Recursive Character Text Chunking          │
+     │ (Chunk Size: 2000 | Overlap: 200)          │
+     └─────────┬──────────────────────────────────┘
+                               │
+                               ▼
+    ┌─────────────────────────────────────────────┐
+    │ Sentence Transformer Embeddings             │
+    │ (all-MiniLM-L6-v2)                          │
+    └─────────┬───────────────────────────────────┘
+                               │
+                               ▼
+    ┌─────────────────────────────────────────────┐
+    │ FAISS Vector Index (Cosine Similarity)      │
+    └─────────┬───────────────────────────────────┘
+                               │
+             ┌─────────────────┼─────────────────┐
+             ▼                 ▼                 ▼
+ ┌─────────────────┐ ┌────────────────┐ ┌──────────────────┐
+ │ Notes Generator  │ │ RAG Chat System │ │ MCQ Generator  │
+ └────────┬────────┘ └────────┬───────┘ └────────┬─────────┘
+          │                  │                   │
+          ▼                  ▼                   ▼
+ ┌────────────────────────────────────────────────────┐
+ │     Groq Llama 3.1 8B Instant (LLM Layer)          │
+ └────────────────────────────────────────────────────┘
 ```
 
 ---
 
-# Key Features
+## 🧠 Prompt Engineering (System Design Perspective)
 
-## AI-Generated Exam Notes
-
-ExamGuide automatically transforms lengthy PDFs into structured revision notes optimized for examination preparation.
-
-Instead of generic summaries, carefully engineered prompts instruct the language model to produce:
-
-- Hierarchical headings
-- Organized bullet points
-- Highlighted key concepts
-- Exam-focused formatting
-- Tables whenever appropriate
-
-The generated notes are concise, readable, and designed specifically for efficient revision.
+Instead of treating prompts as isolated text blocks, this system uses **role-based prompt control strategies**.
 
 ---
 
-## Prompt Engineering
+### 1. Instruction-Constrained Generation (Notes System)
 
-High-quality educational content requires more than simply passing text to an LLM.
+The model is guided to:
+- Transform raw text into structured academic output
+- Remove noise and redundancy
+- Preserve only exam-relevant information
 
-ExamGuide uses carefully designed prompt templates that instruct the model to:
-
-- Prioritize important concepts
-- Organize information logically
-- Produce revision-friendly notes
-- Format outputs consistently
-- Generate valid JSON for MCQ creation
-- Maintain educational relevance throughout generation
-
-These prompts significantly improve output quality and consistency compared to generic prompting.
-
----
-
-## Intelligent Document Processing
-
-Before any AI generation begins, uploaded PDFs undergo multiple preprocessing stages.
-
-The pipeline performs:
-
-- Text extraction using **PyMuPDF**
-- Cleaning and whitespace normalization
-- Intelligent recursive chunking
-- Context preservation through overlapping chunks
-
-The use of overlapping chunks helps maintain semantic continuity between neighboring sections of the document.
-
----
-
-## Semantic Embedding Generation
-
-Every chunk is encoded using the **all-MiniLM-L6-v2 Sentence Transformer model**.
-
-Instead of keyword matching, embeddings capture semantic meaning, allowing conceptually similar passages to be retrieved even when different wording is used.
-
-This significantly improves retrieval quality for natural language questions.
-
----
-
-## FAISS-Powered Vector Search
-
-Generated embeddings are converted to float32, **L2-normalized**, and indexed using **FAISS IndexFlatIP**.
-
-This implementation enables efficient cosine similarity retrieval over the entire document and serves as the retrieval backbone of the RAG pipeline.
-
-Rather than searching by exact keywords, the system searches by meaning.
-
----
-
-## Context-Aware AI Chat
-
-For every user question, ExamGuide:
-
-- Converts the query into a semantic embedding
-- Searches the FAISS vector database
-- Retrieves the three most relevant chunks
-- Injects retrieved context into the LLM prompt
-- Produces a document-grounded response
-
-This retrieval-first strategy greatly improves factual accuracy and contextual relevance.
-
----
-
-## AI-Generated MCQ Quizzes
-
-Beyond note generation, ExamGuide automatically creates multiple-choice quizzes from the processed study material.
-
-The LLM is prompted to return quiz data in structured JSON format, enabling seamless parsing, automatic scoring, and interactive self-assessment.
-
-These quizzes encourage active recall and reinforce long-term retention.
-
----
-
-# End-to-End AI Pipeline
-
-```text
-                    Upload PDF
-                         │
-                         ▼
-              Extract Text (PyMuPDF)
-                         │
-                         ▼
-             Clean & Normalize Content
-                         │
-                         ▼
-          Recursive Character Chunking
-                 (2000 / 200 overlap)
-                         │
-                         ▼
-     Generate Sentence Embeddings
-       (all-MiniLM-L6-v2 Model)
-                         │
-                         ▼
-        L2 Normalization + FAISS Index
-                         │
-          ┌──────────────┼───────────────┐
-          │              │               │
-          ▼              ▼               ▼
-   Exam Notes      AI Chat (RAG)     MCQ Generator
-          │              │               │
-          ▼              ▼               ▼
-   PDF Export     Top-3 Chunk       JSON Quiz
-                   Retrieval         Generation
-```
-
----
-
-# Application Showcase
-
-## Home Interface
-
+This ensures consistent **study-grade formatting** without manual rules.
 <p align="center">
-<img src="assets/homepage.png" width="92%">
+  <img src="assets/notes.png" width="60%">
 </p>
-
 ---
 
-## Exam Notes
+### 2. Context-Grounded QA (Chat System)
 
+The chatbot is strictly constrained to:
+
+- Use ONLY retrieved FAISS context
+- Avoid external knowledge injection
+- Return fallback response when context is insufficient
+
+This reduces hallucination and ensures **document-bound reasoning**.
 <p align="center">
-<img src="assets/notes.png" width="92%">
+  <img src="assets/chat.png" width="60%">
 </p>
-
 ---
 
-## AI Chat
+### 3. Structured Output Enforcement (MCQ System)
 
+MCQ generation is designed as a **schema-constrained task**:
+
+- Output must follow strict JSON structure
+- Deterministic formatting required for parsing
+- Includes validation layer for malformed outputs
 <p align="center">
-<img src="assets/chat.png" width="92%">
+  <img src="assets/quiz.png" width="60%">
 </p>
+---
+
+### 🧩 SafeJSON Handling Layer
+
+The system includes a **Safe JSON recovery mechanism**:
+
+- Removes markdown code blocks from LLM output
+- Extracts JSON using regex fallback
+- Attempts parsing with fallback extraction logic
+
+This ensures:
+- MCQ system does not break due to malformed LLM responses  
+- Robust handling of unpredictable LLM formatting  
 
 ---
 
-## MCQ Quiz
+## 🧠 Chunking Strategy (Critical Design Component)
 
-<p align="center">
-<img src="assets/quiz.png" width="92%">
-</p>
+The system uses controlled chunking:
 
-The application seamlessly combines semantic retrieval, prompt engineering, and large language models into a unified workflow that supports note generation, contextual question answering, and active learning through automated assessment.
-# Installation
+- Chunk size: ~2000 characters  
+- Overlap: 200 characters  
+- Max chunks processed: **5 only**
 
-## Clone the Repository
+### Design Reasoning:
+- Prevents token overflow in LLM calls  
+- Reduces embedding computation cost  
+- Improves retrieval relevance  
+- Forces focus on high-information segments  
 
-```bash
-git clone https://github.com/YOUR_USERNAME/ExamGuide.git
-```
-
-Navigate to the project directory:
-
-```bash
-cd ExamGuide
-```
+This is a **performance + cost optimization decision**, not just preprocessing.
 
 ---
 
-## Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## Launch the Application
-
-```bash
-streamlit run app.py
-```
-
-The application will open locally in your default web browser.
-
-Alternatively, you can access the deployed version on Streamlit:
-
-**🔗 Live Demo:**  
-`https://your-streamlit-app-url`
-
----
-
-# How It Works
-
-1. The user uploads a PDF containing study material.
-
-2. PyMuPDF extracts the text from the document.
-
-3. The extracted text is cleaned and normalized to remove unnecessary formatting.
-
-4. The document is divided into overlapping chunks using `RecursiveCharacterTextSplitter` to preserve contextual continuity.
-
-5. Each chunk is converted into a dense semantic embedding using the `all-MiniLM-L6-v2` Sentence Transformer model.
-
-6. The embeddings are L2-normalized and indexed using FAISS (`IndexFlatIP`) for efficient cosine similarity search.
-
-7. Depending on the selected feature:
-   - The LLM generates structured exam-ready notes.
-   - The top three semantically relevant chunks are retrieved to answer user queries through the RAG pipeline.
-   - The LLM generates multiple-choice questions in structured JSON format for interactive quizzes.
-
-8. Generated notes can be exported as a PDF for offline revision.
-
----
-
-# Technical Implementation
-
-## Document Processing
-
-Every uploaded PDF undergoes a preprocessing pipeline before AI generation begins.
-
-The system:
-
-- Extracts text using **PyMuPDF**
-- Removes unnecessary whitespace and formatting artifacts
-- Normalizes document structure
-- Splits content using **RecursiveCharacterTextSplitter**
-- Preserves contextual continuity through overlapping chunks
-
-The chunking strategy uses:
-
-- **Chunk Size:** 2000 characters
-- **Chunk Overlap:** 200 characters
-
-This overlap helps retain relationships between adjacent sections and improves retrieval quality.
-
----
-
-## Semantic Embedding Generation
-
-Each chunk is transformed into a dense vector representation using:
-
-**Sentence Transformers – `all-MiniLM-L6-v2`**
-
-Unlike keyword matching, embeddings capture semantic meaning, enabling the system to retrieve conceptually relevant passages even when wording differs.
-
-These embeddings form the knowledge base for retrieval.
-
----
-
-## Vector Database & Similarity Search
-
-Generated embeddings are:
-
-- Converted to `float32`
-- L2 normalized
-- Indexed using **FAISS IndexFlatIP**
-
-This implementation effectively performs cosine similarity search and enables rapid semantic retrieval across the uploaded document.
-
-When a user asks a question:
-
-1. The query is embedded.
-2. FAISS searches the vector index.
-3. The **three most relevant chunks** are retrieved.
-4. Retrieved context is injected into the LLM prompt.
-
-This retrieval-first approach significantly improves contextual relevance while minimizing hallucinations.
-
----
-
-## Large Language Model Integration
-
-ExamGuide uses:
-
-**Meta Llama 3.1 8B Instant**  
-**Served through the Groq API**
-
-The LLM powers:
-
-- Exam note generation
-- Context-aware question answering
-- Multiple-choice question creation
-
-Generation is performed with a **temperature of 0.2**, producing more deterministic and academically consistent outputs.
-
----
-
-## Prompt Engineering Strategy
-
-Rather than relying on generic prompting, ExamGuide uses specialized prompt templates tailored for educational tasks.
-
-### Notes Generation
-
-The model is instructed to produce:
-
-- Structured headings
-- Bullet points
-- Highlighted key concepts
-- Tables whenever appropriate
-- Revision-friendly formatting
-
-Instead of simple summaries, outputs resemble curated study notes.
-
-### Question Answering
-
-The chatbot receives:
-
-- Retrieved document context
-- User question
-
-and is explicitly instructed to answer **only using the supplied context**, ensuring responses remain grounded in the uploaded material.
-
-### MCQ Generation
-
-The model generates quizzes in **strict JSON format**, enabling:
-
-- Automatic parsing
-- Interactive radio-button quizzes
-- Instant evaluation
-- Accurate score calculation
-
-This structured prompting improves reliability and simplifies downstream processing.
-
----
-
-# Why Retrieval-Augmented Generation?
-
-Traditional language models answer primarily from pretrained knowledge, which can lead to hallucinations or responses unrelated to the uploaded material.
-
-ExamGuide instead implements a complete **Retrieval-Augmented Generation (RAG) pipeline**.
-
-Before generating an answer:
-
-- The question is embedded.
-- Similar document chunks are retrieved.
-- Retrieved context is attached to the prompt.
-- The language model reasons over that context.
-
-This architecture enables responses that are grounded in the user's own study material rather than relying solely on model memory.
-
----
-
-# Technology Stack
-
-## Programming Language
-
-- Python
-
-## Frontend
-
-- Streamlit
-
-## Large Language Model
-
-- Meta Llama 3.1 8B Instant
-- Groq API
-
-## Embedding Model
-
-- Sentence Transformers (`all-MiniLM-L6-v2`)
-
-## Retrieval System
-
-- FAISS
-- IndexFlatIP
-- Cosine Similarity Search
-
-## Document Processing
-
-- PyMuPDF
-- RecursiveCharacterTextSplitter
-
-## Data Processing
-
-- NumPy
-
-## PDF Generation
-
-- FPDF
-
-## State Management
-
-- Streamlit Session State
-
----
-
-# Project Structure
-
-```text
+## 📂 Project Structure
 ExamGuide/
 │
-├── app.py
-├── requirements.txt
+├── notes_app.py 
+├── notes.ipynb
+├── requirements.txt 
 ├── README.md
 │
-├── assets/
-│   ├── homepage.png
-│   ├── notes.png
-│   ├── chat.png
-│   ├── quiz.png
-│   └── architecture.png
-│
-└── temp/
-```
+├── assets
+│ ├── homepage1.png 
+│ ├── notes.png 
+│ ├── chat.png 
+│ ├── quiz.png 
+
+## ⚙️ Tech Stack
+
+The project is built using a lightweight but scalable AI stack optimized for document-based retrieval and generation.
+
+- **Application Framework:** Streamlit  
+- **LLM API:** Groq (Llama 3.1 Instant)  
+- **Embedding Model:** SentenceTransformers (all-MiniLM-L6-v2)  
+- **Vector Database:** FAISS (Facebook AI Similarity Search)  
+- **PDF Processing:** PyMuPDF (fitz)  
+- **Text Chunking:** LangChain Recursive Character Text Splitter  
+- **Backend Language:** Python 3.10+  
+- **Output Formatting:** FPDF (PDF generation)  
+- **Data Reliability Layer:** Regex-based SafeJSON parsing  
 
 ---
 
-# Key Advantages
+## 🖥️ Streamlit Application Design
 
-Compared to conventional AI note generators, ExamGuide offers:
+The entire system runs as a **single-page interactive Streamlit application**.
 
-| Traditional Summarizers | ExamGuide |
-|-------------------------|-----------|
-| Static summaries | Interactive AI study assistant |
-| Keyword search | Semantic vector retrieval |
-| Generic chatbot | Context-grounded RAG chatbot |
-| Passive reading | Active learning through quizzes |
-| Manual revision | AI-generated exam notes |
-| No personalization | Answers based on uploaded PDFs |
-| Limited understanding | Semantic document comprehension |
+### UI Structure:
+- Sidebar:
+  - Groq API key input
+  - PDF upload section
+  - “Process Document” trigger
+- Main Interface:
+  - Tab 1: Notes
+  - Tab 2: Chat with Document
+  - Tab 3: MCQ Quiz
 
----
+### State Management:
+- Uses `st.session_state` for:
+  - Uploaded chunks
+  - Embeddings model
+  - FAISS index
+  - Chat history
+  - Quiz answers
 
-# Future Enhancements
+This ensures a **persistent session experience without database dependency**.
 
-The architecture is designed to be extensible and can be expanded with:
+## ⚙️ How the System Works
 
-- Multi-document knowledge bases
-- OCR support for scanned PDFs
-- Flashcard generation
-- Adaptive quizzes based on performance
-- Citation-aware answers
-- Voice interaction
-- Personalized revision schedules
-- Image and diagram understanding
-- Multi-language document support
+The application follows a **Retrieval-Augmented Document Intelligence pipeline** built inside a Streamlit web interface.
 
 ---
 
-# Learning Outcomes
+### 📥 1. Document Upload (Streamlit UI)
 
-This project demonstrates practical implementation of:
-
-- Retrieval-Augmented Generation (RAG)
-- Semantic Search
-- Vector Embeddings
-- FAISS Vector Databases
-- Prompt Engineering
-- Large Language Models
-- Sentence Transformers
-- Context-Aware Conversational AI
-- AI-Powered Note Generation
-- Automated Quiz Generation
-- PDF Processing
-- Interactive Web Applications
-
-It showcases how modern retrieval systems and language models can be integrated into a complete educational platform rather than functioning as isolated AI components.
+- User uploads a PDF file through the Streamlit sidebar
+- The file is temporarily stored and passed to the processing pipeline
 
 ---
 
-# Disclaimer
+### 📄 2. Text Extraction & Cleaning
 
-ExamGuide is intended for educational and research purposes.
+- PDF text is extracted using **PyMuPDF (fitz)**
+- Raw text is cleaned to remove:
+  - Extra spaces  
+  - Broken lines  
+  - Irrelevant formatting noise  
 
-While it provides context-aware notes and answers based on uploaded documents, users should always verify generated content against original study material when preparing for examinations or academic work.
+This ensures consistent downstream processing.
 
 ---
 
-<div align="center">
+### ✂️ 3. Chunking Strategy
 
-## ⭐ If you found this project useful, consider giving it a star!
+The cleaned document is split into smaller overlapping segments:
 
-### **ExamGuide: AI-Powered Study Assistant**
+- Chunk size: ~2000 characters  
+- Overlap: ~200 characters  
+- Processing limit: **only first 5 chunks are used**
 
-*Built using Retrieval-Augmented Generation (RAG), Semantic Search, Prompt Engineering, FAISS Vector Search, and Meta Llama 3.1 8B Instant to transform static PDFs into an intelligent, interactive learning experience.*
+This is a deliberate design choice to:
+- Reduce API cost  
+- Improve response speed  
+- Focus on high-information content  
 
-</div>
+---
+
+### 🧠 4. Embedding Generation
+
+- Each chunk is converted into vector embeddings using:
+  - `SentenceTransformers (all-MiniLM-L6-v2)`
+
+These embeddings capture semantic meaning rather than keyword matching.
+
+---
+
+### 📦 5. Vector Storage (FAISS)
+
+- All embeddings are stored in a FAISS index
+- Enables fast similarity search using cosine similarity (via L2 normalization)
+
+This allows the system to retrieve relevant content efficiently during queries.
+
+---
+
+## 💬 6. Core Functional Modules
+
+Once the document is processed, the system unlocks three main features:
+
+---
+
+### 📝 A. Notes Generation Module
+
+- Each chunk is sent to the Groq LLM
+- The model converts raw text into structured exam notes
+- Output focuses on:
+  - Key concepts  
+  - Bullet points  
+  - Exam-oriented formatting  
+
+Result: condensed study material from large PDFs.
+
+---
+
+### 💬 B. Chat with Document (RAG System)
+
+This is the **core retrieval system**.
+
+**Flow:**
+1. User asks a question  
+2. Question is converted into an embedding  
+3. FAISS retrieves most relevant chunks  
+4. Retrieved context + question is sent to Groq LLM  
+5. LLM generates an answer strictly based on context  
+
+If context is insufficient, the model returns a fallback-style response.
+
+---
+
+### 🧩 C. MCQ Quiz Generator
+
+- Document content is sent to LLM in batches
+- Model generates multiple-choice questions
+- Output is expected in structured JSON format
+
+A **SafeJSON layer** ensures:
+- Removal of markdown artifacts  
+- Recovery from malformed JSON  
+- Stable parsing for quiz rendering  
+
+---
+
+## 📊 Output & Evaluation Layer
+
+### Quiz System
+- Displays MCQs in Streamlit UI
+- Captures user answers using session state
+- Calculates:
+  - Score
+  - Percentage accuracy
+  - Performance feedback  
+
+---
+
+### 📄 PDF Export
+- Notes are formatted using FPDF
+- Generates downloadable revision document
+- Ensures clean offline study material
+
+---
+## 🚀 Live Demo
+
+Try the deployed application here:
+
+👉https://notesmaker-mdhia3eskryyji43xhlgfb.streamlit.app/
+
+---
+
+## 🚧 Limitations
+
+While the system is functional and optimized, it has some constraints:
+
+- Only first **5 chunks are processed per document**
+  - limits full-document reasoning for very large PDFs  
+- No persistent storage (session-based only)
+- FAISS index is in-memory (not saved across sessions)
+- Requires active Groq API key for all LLM operations
+- No multi-document comparison capability
+
+---
+
+## 🚀 Future Scope
+
+This system can be extended into a production-grade AI learning platform.
+
+### 1. Multi-Document RAG System
+- Support multiple PDFs simultaneously
+- Cross-document question answering
+
+---
+
+### 2. Persistent Vector Database
+- Replace in-memory FAISS with:
+  - Pinecone / ChromaDB / FAISS disk storage
+- Enable long-term document memory
+
+---
+
+### 3. Advanced Retrieval Ranking
+- Add reranking models for better chunk selection
+- Improve context precision in QA system
+
+---
+
+### 4. Streaming Responses
+- Real-time token streaming in chat interface
+- Better UX for long answers
+
+---
+
+### 5. Adaptive MCQ Difficulty System
+- Dynamic difficulty based on user performance
+- Personalized learning paths
+
+---
+
+### 6. AI-Powered Study Assistant Expansion
+- Voice-based Q&A system
+- Smart revision scheduler
+- Auto-generated revision summaries
+
+---
+
+### 7. Deployment Enhancements
+- Streamlit Cloud / HuggingFace Spaces deployment
+- Dockerized production build
+
+---
+
+## ⚠️ System Constraints Summary
+
+- Designed for single-user session usage
+- Optimized for speed over full-document reasoning
+- Depends on external LLM API (Groq)
+- No offline AI inference capability
+
+---
+
+## 📌 Final Summary
+
+Exam Guide is a **Streamlit-based AI document intelligence system** that combines:
+
+- Semantic search (FAISS)
+- Lightweight embeddings
+- LLM-based reasoning (Groq)
+- Structured study output generation
+
+It demonstrates a complete **retrieval-augmented generation pipeline for educational content processing**.
+
+---
