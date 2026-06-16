@@ -234,7 +234,7 @@ def export_pdf(notes):
     return buffer
 # ───────────────────────── SIDEBAR ─────────────────────────
 with st.sidebar:
-    st.title("🧠 StudyAI Pro")
+    st.title("🧠 EXAM GUIDE")
 
     key = st.text_input("Groq API Key", type="password")
     if key:
