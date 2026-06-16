@@ -220,6 +220,7 @@ This is a **performance + cost optimization decision**, not just preprocessing.
 ---
 
 ## 📂 Project Structure
+```text
 ExamGuide/
 │
 ├── notes_app.py 
@@ -232,6 +233,7 @@ ExamGuide/
 │ ├── notes.png 
 │ ├── chat.png 
 │ ├── quiz.png 
+```
 
 ## ⚙️ Tech Stack
 
