@@ -15,7 +15,7 @@ from fpdf import FPDF
 from io import BytesIO
 
 # ───────────────────────── CONFIG ─────────────────────────
-st.set_page_config(page_title="StudyAI Pro", page_icon="🧠", layout="wide")
+st.set_page_config(page_title="Exam Guide", page_icon="🧠", layout="wide")
 
 MAX_CHUNKS_TO_PROCESS = 5        # 🔥 prevents API overload
 API_SLEEP = 1.2                  # 🔥 prevents burst rate limit
