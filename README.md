@@ -223,19 +223,7 @@ MCQ generation is designed as a **schema-constrained task**:
 </p>
 ---
 
-### 🧩 SafeJSON Handling Layer
 
-The system includes a **Safe JSON recovery mechanism**:
-
-- Removes markdown code blocks from LLM output
-- Extracts JSON using regex fallback
-- Attempts parsing with fallback extraction logic
-
-This ensures:
-- MCQ system does not break due to malformed LLM responses  
-- Robust handling of unpredictable LLM formatting  
-
----
 
 ## 🧠 Chunking Strategy (Critical Design Component)
 
