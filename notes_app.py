@@ -14,13 +14,11 @@ from sentence_transformers import SentenceTransformer
 from fpdf import FPDF
 from io import BytesIO
 
-# ───────────────────────── CONFIG ─────────────────────────
 st.set_page_config(page_title="Exam Guide", page_icon="🧠", layout="wide")
 
 MAX_CHUNKS_TO_PROCESS = 5
 API_SLEEP = 1.2
 
-# ───────────────────────── CUSTOM CSS ─────────────────────────
 st.markdown("""
 <style>
 /* ── Google Font ── */
@@ -31,7 +29,6 @@ html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
 }
 
-/* ── Background ── */
 .stApp {
     background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
     min-height: 100vh;
@@ -282,7 +279,6 @@ label {
 </style>
 """, unsafe_allow_html=True)
 
-# ───────────────────────── SESSION STATE ─────────────────────────
 defaults = {
     "chunks": [], "notes": [], "faiss_index": None,
     "embeddings_model": None, "chat_history": [],
@@ -293,12 +289,10 @@ for k, v in defaults.items():
     if k not in st.session_state:
         st.session_state[k] = v
 
-# ───────────────────────── CACHE MODEL ─────────────────────────
 @st.cache_resource
 def load_model():
     return SentenceTransformer("all-MiniLM-L6-v2")
 
-# ───────────────────────── GROQ CLIENT ─────────────────────────
 def get_client():
     return Groq(api_key=st.session_state.api_key)
 
@@ -318,7 +312,6 @@ def llm(prompt, system=""):
     except Exception as e:
         return f"ERROR: {str(e)}"
 
-# ───────────────────────── PDF ─────────────────────────
 def extract_text(file):
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as f:
         f.write(file.read())
@@ -340,7 +333,6 @@ def chunk_text(text):
     splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
     return splitter.split_text(text)
 
-# ───────────────────────── NOTES ─────────────────────────
 def summarize(chunk):
     prompt = f"""
 Convert into structured exam notes:
@@ -354,7 +346,6 @@ TEXT:
 """
     return llm(prompt).strip()
 
-# ───────────────────────── MCQ ─────────────────────────
 @st.cache_data(show_spinner=False)
 def generate_mcq(text):
     prompt = f"""
@@ -380,7 +371,6 @@ TEXT:
         match = re.search(r"\[.*\]", raw, re.S)
         return json.loads(match.group()) if match else []
 
-# ───────────────────────── FAISS ─────────────────────────
 @st.cache_resource
 def build_index(chunks):
     model = load_model()
@@ -391,7 +381,6 @@ def build_index(chunks):
     index.add(emb)
     return index, model
 
-# ───────────────────────── QA ─────────────────────────
 def answer_question(q):
     model = st.session_state.embeddings_model
     index = st.session_state.faiss_index
@@ -413,7 +402,6 @@ Question: {q}
     sources = [f"Chunk {i+1}" for i in idxs[0]]
     return ans, sources
 
-# ───────────────────────── PDF EXPORT ─────────────────────────
 def export_pdf(notes):
     pdf = FPDF()
     pdf.add_page()
@@ -446,7 +434,6 @@ def export_pdf(notes):
     buffer.seek(0)
     return buffer
 
-# ───────────────────────── SIDEBAR ─────────────────────────
 with st.sidebar:
     st.markdown("# 🧠 EXAM GUIDE")
     st.markdown("---")
@@ -494,7 +481,6 @@ with st.sidebar:
         unsafe_allow_html=True
     )
 
-# ───────────────────────── HERO ─────────────────────────
 st.markdown("""
 <div class="hero">
     <h1>🧠 Exam Guide</h1>
@@ -511,7 +497,6 @@ if not st.session_state.ready:
 # ───────────────────────── TABS ─────────────────────────
 tab1, tab2, tab3 = st.tabs(["📝  Notes", "💬  Chat", "🧩  Quiz"])
 
-# ─────────── NOTES TAB ───────────
 with tab1:
     col_a, col_b = st.columns([3, 1])
     with col_a:
@@ -537,7 +522,6 @@ with tab1:
         )
         st.markdown(n)
 
-# ─────────── CHAT TAB ───────────
 with tab2:
     st.markdown("### 💬 Ask Anything About Your Material")
 
@@ -566,7 +550,6 @@ with tab2:
         )
         st.caption("📎 Sources: " + ", ".join(src))
 
-# ─────────── QUIZ TAB ───────────
 with tab3:
     st.markdown("### 🧩 Test Your Knowledge")
 
